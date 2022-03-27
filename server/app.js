@@ -37,7 +37,6 @@ app.use(cookieParser());
 router(app);
 
 app.listen(port, (err) => {
-  if (err) {
-    console.log(`Listening on port ${port}`);
-  }
+  if (err) { throw err; }
+  console.log(`Listening on port ${port}`);
 });

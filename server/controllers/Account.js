@@ -6,8 +6,8 @@ const loginPage = (req, res) => res.render('login');// end login page
 
 const signUpPage = (req, res) => res.render('signup');// end sign up page
 
-const logout = (req, res) => {
-  req.session.destroy(); // removes users session
+const logout = (req, res) =>{ 
+  req.session.destroy();
   res.redirect('/');
 };// end logout
 
@@ -25,7 +25,6 @@ const login = (req, res) => {
       return res.status(400).json({ error: 'Wrong username or password!' });
     }
 
-    //attach all the info of the user to the API
     req.session.account = Account.toAPI(account);
 
     return res.json({ redirect: './maker' });
@@ -56,14 +55,14 @@ const signup = async (req, res) => {
         password: hash,
       }
     ));
+    
     // we can save to db b/c of how sendPost() in client.js handles requests
     await newAccount.save();
-    //since user is signing up and being logged in automatically, we need
-    //to duplicate  the account data in the session 
-    req.session.account = Account.toAPI(newAccount);
     
-    //redirect to /maker page
+    req.session.account = Account.toAPI(newAccount);
+
     return res.json({ redirect: '/maker' });
+
   } catch (err) {
     console.log(err);
     if (err.code === 11000) { // code 11000 is mongo's duplicate entry error

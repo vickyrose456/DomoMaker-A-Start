@@ -1,4 +1,5 @@
 const models = require('../models');
+
 const Domo = models.Domo;
 
 const makerPage = (req, res) => {
@@ -6,9 +7,8 @@ const makerPage = (req, res) => {
 };// maker page
 
 const makeDomo = async (req, res) => {
-  if(!req.body.name || !req.body.age)
-  {
-    return res.status(400).json({error: 'Both name and age are required!'});
+  if (!req.body.name || !req.body.age) {
+    return res.status(400).json({ error: 'Both name and age are required!' });
   }
 
   const domoData = {
@@ -17,21 +17,19 @@ const makeDomo = async (req, res) => {
     owner: req.session.account._id,
   };
 
-  try{
+  try {
     const newDomo = new Domo(domoData);
     await newDomo.save();
-    return res.json({redirect: '/maker'});
-  }catch (err) {
+    return res.json({ redirect: '/maker' });
+  } catch (err) {
     console.log(err);
-    if(err.code === 11000)
-    {
-      return res.status(400).json({error: 'Domo already exist!'});
+    if (err.code === 11000) {
+      return res.status(400).json({ error: 'Domo already exist!' });
     }
 
-    return res.status(400).json({error: 'An error occured'});
+    return res.status(400).json({ error: 'An error occured' });
   }
-
-};//make domo
+};// make domo
 
 module.exports = {
   makerPage,

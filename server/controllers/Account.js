@@ -24,6 +24,10 @@ const login = (req, res) => {
     if (err || !account) {
       return res.status(400).json({ error: 'Wrong username or password!' });
     }
+
+    //attach all the info of the user to the API
+    req.session.account = Account.toAPI(account);
+
     return res.json({ redirect: './maker' });
   });
 };// end login
@@ -54,6 +58,11 @@ const signup = async (req, res) => {
     ));
     // we can save to db b/c of how sendPost() in client.js handles requests
     await newAccount.save();
+    //since user is signing up and being logged in automatically, we need
+    //to duplicate  the account data in the session 
+    req.session.account = Account.toAPI(newAccount);
+    
+    //redirect to /maker page
     return res.json({ redirect: '/maker' });
   } catch (err) {
     console.log(err);

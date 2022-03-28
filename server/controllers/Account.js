@@ -6,7 +6,10 @@ const loginPage = (req, res) => res.render('login');// end login page
 
 const signUpPage = (req, res) => res.render('signup');// end sign up page
 
-const logout = (req, res) => res.redirect('/');// end logout
+const logout = (req, res) => {
+  req.session.destroy(); // removes users session
+  res.redirect('/');
+};// end logout
 
 const login = (req, res) => {
   const username = `${req.body.username}`;

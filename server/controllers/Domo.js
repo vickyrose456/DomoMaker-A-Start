@@ -1,9 +1,16 @@
 const models = require('../models');
 
-const Domo = models.Domo;
+const { Domo } = models;
 
 const makerPage = (req, res) => {
-  res.render('app');
+  Domo.findByOwner(req.session.account._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error has occured!' });
+    }
+    // no error, so render the domos
+    return res.render('app', { domos: docs });
+  });
 };// maker page
 
 const makeDomo = async (req, res) => {

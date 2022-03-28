@@ -6,7 +6,7 @@ const loginPage = (req, res) => res.render('login');// end login page
 
 const signUpPage = (req, res) => res.render('signup');// end sign up page
 
-const logout = (req, res) =>{ 
+const logout = (req, res) => {
   req.session.destroy();
   res.redirect('/');
 };// end logout
@@ -55,14 +55,13 @@ const signup = async (req, res) => {
         password: hash,
       }
     ));
-    
+
     // we can save to db b/c of how sendPost() in client.js handles requests
     await newAccount.save();
-    
+
     req.session.account = Account.toAPI(newAccount);
 
     return res.json({ redirect: '/maker' });
-
   } catch (err) {
     console.log(err);
     if (err.code === 11000) { // code 11000 is mongo's duplicate entry error

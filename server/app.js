@@ -8,6 +8,8 @@ const mongoose = require('mongoose');
 const expressHandlebars = require('express-handlebars');
 const helmet = require('helmet');
 const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+const redis = require('redis');
 
 const router = require('./router.js');
 
@@ -23,6 +25,17 @@ mongoose.connect(dbURI, (err) => {
     throw err;
   }
 });
+
+// connect to redis (hardcoded way)
+const redisURL = process.env.REDISCLOUD_URL
+|| 'redis://default:Uxt1yhJYU6WrwT4CjmkgfpUFpbf0q1th@redis-16243.c263.us-east-1-2.ec2.cloud.redislabs.com:16243';
+
+const redisClient = redis.createClient({
+  legacyMode: true,
+  url: redisURL,
+});
+
+redisClient.connect().catch(console.error);
 
 const app = express();
 
@@ -40,11 +53,25 @@ resave = tells session to refresh so key is active
 saveUn... = option tells module to always make sessions even when not logged in
 this auto gen each user session key
 */
-app.use(session({
+/* app.use(session({
   key: 'sessionid',
   secret: 'Domo Arigato',
   resave: true,
   saveUninitialized: true,
+})); */
+
+// instead of storing everything in server variables, store in Redis DB instead
+app.use(session({
+  key: 'sessionid',
+  store: new RedisStore({
+    client: redisClient,
+  }),
+  secret: 'Domo Arigato',
+  resave: true,
+  saveUninitialized: true,
+  cookie: {
+    httpOnly: true,
+  },
 }));
 
 app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));

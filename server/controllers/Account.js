@@ -2,9 +2,13 @@ const models = require('../models');
 
 const { Account } = models;
 
-const loginPage = (req, res) => res.render('login');// end login page
+const loginPage = (req, res) => {
+  res.render('login', { csrfToken: req.csrfToken() });
+};// end login page
 
-const signUpPage = (req, res) => res.render('signup');// end sign up page
+const signUpPage = (req, res) => {
+  res.render('signup', { csrfToken: req.csrfToken() });
+};// end sign up page
 
 const logout = (req, res) => {
   req.session.destroy();

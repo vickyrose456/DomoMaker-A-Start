@@ -79,16 +79,16 @@ app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 app.use(cookieParser());
-//gen unique token for each req. req from same session will match
-/*otherwise error is called. 
+// gen unique token for each req. req from same session will match
+// otherwise error is called.
 app.use(csrf());
 
-app.use((err, req, res, next)=>{
-  if(err.code!== 'EBADCSRFTOKEN') return next(err);
+app.use((err, req, res, next) => {
+  if (err.code !== 'EBADCSRFTOKEN') return next(err);
 
   console.log('Missing csrf token!');
   return false;
-});*/
+});
 
 router(app);
 

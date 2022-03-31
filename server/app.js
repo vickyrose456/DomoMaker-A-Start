@@ -80,7 +80,7 @@ app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 app.use(cookieParser());
 //gen unique token for each req. req from same session will match
-//otherwise error is called. 
+/*otherwise error is called. 
 app.use(csrf());
 
 app.use((err, req, res, next)=>{
@@ -88,7 +88,7 @@ app.use((err, req, res, next)=>{
 
   console.log('Missing csrf token!');
   return false;
-});
+});*/
 
 router(app);
 

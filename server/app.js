@@ -10,6 +10,7 @@ const helmet = require('helmet');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
 const redis = require('redis');
+const csrf = require('csurf');
 
 const router = require('./router.js');
 
@@ -30,7 +31,7 @@ mongoose.connect(dbURI, (err) => {
 const redisURL = process.env.REDISCLOUD_URL
 || 'redis://default:Uxt1yhJYU6WrwT4CjmkgfpUFpbf0q1th@redis-16243.c263.us-east-1-2.ec2.cloud.redislabs.com:16243';
 
-let redisClient = redis.createClient({
+const redisClient = redis.createClient({
   legacyMode: true,
   url: redisURL,
 });
@@ -64,7 +65,7 @@ this auto gen each user session key
 app.use(session({
   key: 'sessionid',
   store: new RedisStore({
-  client: redisClient,
+    client: redisClient,
   }),
   secret: 'Domo Arigato',
   resave: true,
@@ -78,6 +79,16 @@ app.engine('handlebars', expressHandlebars.engine({ defaultLayout: '' }));
 app.set('view engine', 'handlebars');
 app.set('views', `${__dirname}/../views`);
 app.use(cookieParser());
+//gen unique token for each req. req from same session will match
+//otherwise error is called. 
+app.use(csrf());
+
+app.use((err, req, res, next)=>{
+  if(err.code!== 'EBADCSRFTOKEN') return next(err);
+
+  console.log('Missing csrf token!');
+  return false;
+});
 
 router(app);
 

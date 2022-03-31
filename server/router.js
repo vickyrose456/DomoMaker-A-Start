@@ -5,10 +5,10 @@ const router = (app) => {
   // connect routes
   // want to make sure login/signup is secure and logged out
   // so they cant try to login when logged in
-  app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
-  app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
-  //app.get('/login', controllers.Account.loginPage);
-  //app.post('/login', controllers.Account.login);
+  //app.get('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  //app.post('/login', mid.requiresSecure, mid.requiresLogout, controllers.Account.login);
+  app.get('/login', controllers.Account.loginPage);
+  app.post('/login', controllers.Account.login);
 
   // app.get('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signUpPage);
   // app.post('/signup', mid.requiresSecure, mid.requiresLogout, controllers.Account.signup);

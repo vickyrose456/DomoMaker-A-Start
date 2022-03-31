@@ -15,9 +15,11 @@ const requiresLogout = (req, res, next) => {
   return next();
 };// requires logout
 
+// part 2
+
 // since running locally - override secure HTTPS when logging in
 // when not using heroku, would check req.secure and redirect to HTTPS
-const requireSecure = (req, res, next) => {
+const requiresSecure = (req, res, next) => {
   if (req.headers['x-fowarded-proto'] !== 'https') {
     return res.redirect(`https://${req.hostname}${req.url}`);
   }
@@ -33,7 +35,7 @@ module.exports.requiresLogout = requiresLogout;
 
 // NODE_ENV = production when using heroku
 if (process.env.NODE_ENV === 'production') {
-  module.exports.requireSecure = requireSecure;
+  module.exports.requiresSecure = requiresSecure;
 } else {
-  module.exports.requireSecure = bypassSecure;
+  module.exports.requiresSecure = bypassSecure;
 }

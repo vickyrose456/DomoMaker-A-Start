@@ -30,7 +30,7 @@ mongoose.connect(dbURI, (err) => {
 const redisURL = process.env.REDISCLOUD_URL
 || 'redis://default:Uxt1yhJYU6WrwT4CjmkgfpUFpbf0q1th@redis-16243.c263.us-east-1-2.ec2.cloud.redislabs.com:16243';
 
-const redisClient = redis.createClient({
+let redisClient = redis.createClient({
   legacyMode: true,
   url: redisURL,
 });
@@ -64,7 +64,7 @@ this auto gen each user session key
 app.use(session({
   key: 'sessionid',
   store: new RedisStore({
-    client: redisClient,
+  client: redisClient,
   }),
   secret: 'Domo Arigato',
   resave: true,
